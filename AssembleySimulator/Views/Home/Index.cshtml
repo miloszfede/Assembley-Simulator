@@ -1,9 +1,246 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿<!-- Views/Home/Index.cshtml -->
+@model SimulatorViewModel
+@{
+    ViewData["Title"] = "8086 Assembly Simulator";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<style>
+    body {
+        background-color: #f4f4f4;
+        font-family: Arial, sans-serif;
+    }
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+    .register-section, .operation-section {
+        background: white;
+        border-radius: 8px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    .register-section h2, .operation-section h2 {
+        margin-bottom: 10px;
+        color: #333;
+    }
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+    }
+    input[type="text"] {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        width: 100%;
+    }
+    button {
+        width: 100%;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.3s;
+    }
+    button:hover {
+        opacity: 0.9;
+    }
+    .btn-mov { background-color: #007BFF; color: white; }
+    .btn-xchg { background-color: #28A745; color: white; }
+    .btn-push { background-color: #6F42C1; color: white; }
+    .btn-pop { background-color: #6F42C1; color: white; }
+</style>
 
+<div class="container mx-auto p-4">
+    <div class="register-section">
+        <h1 class="text-2xl font-bold mb-6">8086 Assembly Simulator</h1>
+        
+        <form asp-action="Simulate" method="post">
+            <!-- Register Section -->
+            <div class="grid grid-cols-2 gap-6">
+                <div>
+                    <h2 class="text-lg font-semibold">Registers</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label>AX</label>
+                            <input asp-for="AX" class="w-full px-3 py-2 border rounded" value="@Model.AX" />
+                        </div>
+                        <div>
+                            <label>BX</label>
+                            <input asp-for="BX" class="w-full px-3 py-2 border rounded" value="@Model.BX" />
+                        </div>
+                        <div>
+                            <label>CX</label>
+                            <input asp-for="CX" class="w-full px-3 py-2 border rounded" value="@Model.CX" />
+                        </div>
+                        <div>
+                            <label>DX</label>
+                            <input asp-for="DX" class="w-full px-3 py-2 border rounded" value="@Model.DX" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Index Registers -->
+                <div>
+                    <h2 class="text-lg font-semibold">Index Registers</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label>SI</label>
+                            <input asp-for="SI" class="w-full px-3 py-2 border rounded" value="@Model.SI" />
+                        </div>
+                        <div>
+                            <label>DI</label>
+                            <input asp-for="DI" class="w-full px-3 py-2 border rounded" value="@Model.DI" />
+                        </div>
+                        <div>
+                            <label>BP</label>
+                            <input asp-for="BP" class="w-full px-3 py-2 border rounded" value="@Model.BP" />
+                        </div>
+                        <div>
+                            <label>SP</label>
+                            <input asp-for="SP" class="w-full px-3 py-2 border rounded" value="@Model.SP" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operations Section -->
+            <div class="operation-section mt-6">
+                <h2 class="text-lg font-semibold">Operations</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- MOV Operation -->
+                    <div>
+                        <h3 class="font-medium">MOV Operation</h3>
+                        <div class="space-y-2">
+                            <div>
+                                <label for="movSource">From:</label>
+                                <select id="movSource" name="source" class="w-full">
+                                    <option value="AX">AX</option>
+                                    <option value="BX">BX</option>
+                                    <option value="CX">CX</option>
+                                    <option value="DX">DX</option>
+                                    <option value="SI">SI</option>
+                                    <option value="DI">DI</option>
+                                    <option value="BP">BP</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="movDestination">To:</label>
+                                <select id="movDestination" name="destination" class="w-full">
+                                    <option value="AX">AX</option>
+                                    <option value="BX">BX</option>
+                                    <option value="CX">CX</option>
+                                    <option value="DX">DX</option>
+                                    <option value="SI">SI</option>
+                                    <option value="DI">DI</option>
+                                    <option value="BP">BP</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="operation" value="MOV" class="w-full bg-blue-500 text-white p-2 rounded">
+                                MOV
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- XCHG Operation -->
+<div>
+    <h3 class="font-medium">XCHG Operation</h3>
+    <div class="space-y-2">
+        <div>
+            <label for="xchgReg1">Register 1:</label>
+            <select id="xchgReg1" name="xchgSource" class="w-full">
+                <option value="AX">AX</option>
+                <option value="BX">BX</option>
+                <option value="CX">CX</option>
+                <option value="DX">DX</option>
+                <option value="SI">SI</option>
+                <option value="DI">DI</option>
+                <option value="BP">BP</option>
+            </select>
+        </div>
+        <div>
+            <label for="xchgReg2">Register 2:</label>
+            <select id="xchgReg2" name="xchgDestination" class="w-full">
+                <option value="AX">AX</option>
+                <option value="BX">BX</option>
+                <option value="CX">CX</option>
+                <option value="DX">DX</option>
+                <option value="SI">SI</option>
+                <option value="DI">DI</option>
+                <option value="BP">BP</option>
+            </select>
+        </div>
+        <button type="submit" name="operation" value="XCHG" class="w-full bg-green-500 text-white p-2 rounded">
+            XCHG
+        </button>
+    </div>
+</div>
+                <!-- Stack Operations -->
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div>
+                        <h3 class="font-medium">Stack Operations</h3>
+                        <div class="space-y-2">
+                            <div>
+                                <label for="pushRegister">PUSH Register:</label>
+                                <select id="pushRegister" name="pushSource" class="w-full">
+                                    <option value="AX">AX</option>
+                                    <option value="BX">BX</option>
+                                    <option value="CX">CX</option>
+                                    <option value="DX">DX</option>
+                                    <option value="SI">SI</option>
+                                    <option value="DI">DI</option>
+                                    <option value="BP">BP</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="operation" value="PUSH" class="w-full bg-purple-500 text-white p-2 rounded">
+                                PUSH
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="font-medium">POP Operation</h3>
+                        <div class="space-y-2">
+                            <div>
+                                <label for="popRegister">POP Register:</label>
+                                <select id="popRegister" name="popDestination" class="w-full">
+                                    <option value="AX">AX</option>
+                                    <option value="BX">BX</option>
+                                    <option value="CX">CX</option>
+                                    <option value="DX">DX</option>
+                                    <option value="SI">SI</option>
+                                    <option value="DI">DI</option>
+                                    <option value="BP">BP</option>
+                                </select>
+                            </div>
+                            <button type="submit" name="operation" value="POP" class="w-full bg-purple-500 text-white p-2 rounded">
+                                POP
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <!-- Display Current Register Values -->
+        @if (!string.IsNullOrEmpty(Model.AX))
+        {
+            <div class="mt-6 p-4 bg-gray-100 rounded">
+                <h2 class="text-lg font-semibold">Current Register Values</h2>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <strong>AX:</strong> @Model.AX<br />
+                        <strong>BX:</strong> @Model.BX<br />
+                        <strong>CX:</strong> @Model.CX<br />
+                        <strong>DX:</strong> @Model.DX
+                    </div>
+                    <div>
+                        <strong>SI:</strong> @Model.SI<br />
+                        <strong>DI:</strong> @Model.DI<br />
+                        <strong>BP:</strong> @Model.BP<br />
+                        <strong>SP:</strong> @Model.SP
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
