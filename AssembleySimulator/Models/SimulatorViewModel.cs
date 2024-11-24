@@ -25,7 +25,6 @@
     [System.Text.Json.Serialization.JsonIgnore]
     private Stack<string> Stack { get; set; } = new Stack<string>();
 
-    // Initialize Memory and Stack in constructor
     public SimulatorViewModel()
     {
         Memory = new Dictionary<string, string>();
@@ -80,9 +79,10 @@
         
         var value = GetRegisterValue(register);
         Stack.Push(value);
+        var decrease = int.Parse(value, System.Globalization.NumberStyles.HexNumber);
         
         var spValue = int.Parse(SP, System.Globalization.NumberStyles.HexNumber);
-        SP = (spValue - 2).ToString("X4");
+        SP = (spValue - decrease).ToString("X4");
         Console.WriteLine($"Pushed {value}");
     }
 
@@ -92,10 +92,10 @@
         
         var value = Stack.Pop();
         SetRegisterValue(register, value);
-        
+        var add = int.Parse(value, System.Globalization.NumberStyles.HexNumber);
         // Increase SP by 2 when popping
         var spValue = int.Parse(SP, System.Globalization.NumberStyles.HexNumber);
-        SP = (spValue + 2).ToString("X4");
+        SP = (spValue + add).ToString("X4");
         System.Console.WriteLine($"Popped {spValue}");
     }
 

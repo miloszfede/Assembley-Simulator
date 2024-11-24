@@ -49,6 +49,7 @@
     .btn-xchg { background-color: #28A745; color: white; }
     .btn-push { background-color: #6F42C1; color: white; }
     .btn-pop { background-color: #6F42C1; color: white; }
+
 </style>
 
 <div class="container mx-auto p-4">
@@ -113,7 +114,7 @@
                         <h3 class="font-medium">MOV Operation</h3>
                         <div class="space-y-2">
                             <div>
-                                <label for="movSource">From:</label>
+                                <label for="movSource">MOV</label>
                                 <select id="movSource" name="source" class="w-full">
                                     <option value="AX">AX</option>
                                     <option value="BX">BX</option>
@@ -123,9 +124,8 @@
                                     <option value="DI">DI</option>
                                     <option value="BP">BP</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label for="movDestination">To:</label>
+                            
+                                <label for="movDestination">,</label>
                                 <select id="movDestination" name="destination" class="w-full">
                                     <option value="AX">AX</option>
                                     <option value="BX">BX</option>
@@ -147,7 +147,7 @@
     <h3 class="font-medium">XCHG Operation</h3>
     <div class="space-y-2">
         <div>
-            <label for="xchgReg1">Register 1:</label>
+            <label for="xchgReg1">XCHG</label>
             <select id="xchgReg1" name="xchgSource" class="w-full">
                 <option value="AX">AX</option>
                 <option value="BX">BX</option>
@@ -157,9 +157,8 @@
                 <option value="DI">DI</option>
                 <option value="BP">BP</option>
             </select>
-        </div>
-        <div>
-            <label for="xchgReg2">Register 2:</label>
+        
+            <label for="xchgReg2">,</label>
             <select id="xchgReg2" name="xchgDestination" class="w-full">
                 <option value="AX">AX</option>
                 <option value="BX">BX</option>
