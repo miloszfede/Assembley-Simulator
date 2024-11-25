@@ -61,9 +61,16 @@ public class HomeController : Controller
                 case "POP":
                     if (!string.IsNullOrEmpty(popDestination))
                     {
+                        Console.WriteLine($"POP Operation: Popping to {popDestination}");
                         model.ExecutePop(popDestination);
                     }
+                    else
+                    {
+                        Console.WriteLine("POP operation failed: No destination register specified.");
+                    }
                     break;
+
+
 
                 default:
                     ModelState.AddModelError("", "Invalid operation specified");

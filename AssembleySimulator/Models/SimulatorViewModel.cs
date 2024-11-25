@@ -87,17 +87,18 @@
     }
 
     public void ExecutePop(string register)
-    {
-        if (string.IsNullOrEmpty(register) || Stack.Count == 0) return;
-        
-        var value = Stack.Pop();
-        SetRegisterValue(register, value);
+{
+    if (string.IsNullOrEmpty(register)) return;
+
+    var value = GetRegisterValue(register);
+        Stack.Push(value);
         var add = int.Parse(value, System.Globalization.NumberStyles.HexNumber);
-        // Increase SP by 2 when popping
         var spValue = int.Parse(SP, System.Globalization.NumberStyles.HexNumber);
         SP = (spValue + add).ToString("X4");
-        System.Console.WriteLine($"Popped {spValue}");
-    }
+        Console.WriteLine($"Pushed {value}");
+}
+
+
 
     // Calculate effective address for memory operations
     public string CalculateEffectiveAddress(string addressingMode)

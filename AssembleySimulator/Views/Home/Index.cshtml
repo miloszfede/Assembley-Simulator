@@ -99,7 +99,7 @@
                         </div>
                         <div>
                             <label>SP</label>
-                            <input asp-for="SP" class="w-full px-3 py-2 border rounded" value="@Model.SP" readonly />
+                            <input asp-for="SP" class="w-full px-3 py-2 border rounded" value="@Model.SP" />
                         </div>
                     </div>
                 </div>
@@ -114,8 +114,8 @@
                         <h3 class="font-medium">MOV Operation</h3>
                         <div class="space-y-2">
                             <div>
-                                <label for="movSource">MOV</label>
-                                <select id="movSource" name="source" class="w-full">
+                                <label for="movDestination">MOV</label>
+                                <select id="movDestination" name="destination" class="w-full">
                                     <option value="AX">AX</option>
                                     <option value="BX">BX</option>
                                     <option value="CX">CX</option>
@@ -125,8 +125,8 @@
                                     <option value="BP">BP</option>
                                 </select>
                             
-                                <label for="movDestination">,</label>
-                                <select id="movDestination" name="destination" class="w-full">
+                                <label for="movSource">,</label>
+                                <select id="movSource" name="source" class="w-full">
                                     <option value="AX">AX</option>
                                     <option value="BX">BX</option>
                                     <option value="CX">CX</option>
@@ -197,25 +197,28 @@
                         </div>
                     </div>
                     <div>
-                        <h3 class="font-medium">POP Operation</h3>
-                        <div class="space-y-2">
-                            <div>
-                                <label for="popRegister">POP Register:</label>
-                                <select id="popRegister" name="popDestination" class="w-full">
-                                    <option value="AX">AX</option>
-                                    <option value="BX">BX</option>
-                                    <option value="CX">CX</option>
-                                    <option value="DX">DX</option>
-                                    <option value="SI">SI</option>
-                                    <option value="DI">DI</option>
-                                    <option value="BP">BP</option>
-                                </select>
-                            </div>
-                            <button type="submit" name="operation" value="POP" class="w-full bg-purple-500 text-white p-2 rounded">
-                                POP
-                            </button>
-                        </div>
-                    </div>
+    <h3 class="font-medium">POP Operation</h3>
+    <div class="space-y-2">
+        <div>
+            <label for="popRegister">POP Register:</label>
+            <select id="popRegister" name="popDestination" class="w-full">
+                <option value="AX">AX</option>
+                <option value="BX">BX</option>
+                <option value="CX">CX</option>
+                <option value="DX">DX</option>
+                <option value="SI">SI</option>
+                <option value="DI">DI</option>
+                <option value="BP">BP</option>
+            </select>
+
+
+        </div>
+        <button type="submit" name="operation" value="POP" class="w-full bg-purple-500 text-white p-2 rounded">
+            POP
+        </button>
+    </div>
+</div>
+
                 </div>
             </div>
         </form>
@@ -236,7 +239,7 @@
                         <strong>SI:</strong> @Model.SI<br />
                         <strong>DI:</strong> @Model.DI<br />
                         <strong>BP:</strong> @Model.BP<br />
-                        <strong>SP:</strong> @Model.SP
+                        <strong>SP:</strong> @Model.SP<br />
                     </div>
                 </div>
             </div>
