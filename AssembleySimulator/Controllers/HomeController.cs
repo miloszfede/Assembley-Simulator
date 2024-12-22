@@ -9,6 +9,8 @@ public class HomeController : Controller
         var model = GetOrCreateSimulator();
         return View(model);
     }
+
+    
     
     [HttpPost]
     public IActionResult Simulate(
@@ -20,7 +22,8 @@ public class HomeController : Controller
         string xchgDestination,
         string pushSource,
         string popDestination,
-        string addressingMode)
+        string addressingMode,
+        string DISP)
     {
         try 
         {

@@ -2,9 +2,16 @@
 {
     // Memory operations
    
-    public void MoveToMemory(string register, string address)
+     public void MoveToMemory(string register, string address)
     {
-        Memory[address] = GetRegisterValue(register);
+        string registerValue = GetRegisterValue(register);
+        Memory[address] = registerValue;
+    }
+
+    // Optional: Method to get value from memory
+    public string GetMemoryValue(string address)
+    {
+        return Memory.ContainsKey(address) ? Memory[address] : "0000";
     }
 
     // Register Properties
@@ -25,6 +32,8 @@
     [System.Text.Json.Serialization.JsonIgnore]
     private Stack<string> Stack { get; set; } = new Stack<string>();
 
+
+
     public SimulatorViewModel()
     {
         Memory = new Dictionary<string, string>();
@@ -43,6 +52,8 @@
         var registers = new[] { AX, BX, CX, DX, SI, DI, BP, SP };
         return registers.All(r => ValidateHexInput(r?.PadLeft(4, '0')));
     }
+
+    
 
     public void ExecuteMov(string source, string destination)
     {

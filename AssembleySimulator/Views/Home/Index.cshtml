@@ -80,7 +80,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <!-- Index Registers -->
                 <div>
                     <h2 class="text-lg font-semibold">Index Registers</h2>
@@ -222,7 +222,29 @@
                 </div>
             </div>
         </form>
-
+        <!-- Addressing Mode Section -->
+<div class="mt-4">
+    <h3 class="font-medium">Addressing Mode</h3>
+    <div class="grid grid-cols-3 gap-4">
+        <div>
+            <input type="radio" name="addressingMode" value="base" id="baseMode" />
+            <label for="baseMode">Base Mode (BX/BP)</label>
+        </div>
+        <div>
+            <input type="radio" name="addressingMode" value="index" id="indexMode" />
+            <label for="indexMode">Index Mode (SI/DI)</label>
+        </div>
+        <div>
+            <input type="radio" name="addressingMode" value="baseindex" id="baseIndexMode" />
+            <label for="baseIndexMode">Base + Index Mode</label>
+        </div>
+    </div>
+    
+    <div class="mt-2">
+        <label>Displacement (Hex):</label>
+        <input type="text" name="DISP" class="w-full px-3 py-2 border rounded" placeholder="Enter displacement (optional)" />
+    </div>
+</div>
         <!-- Display Current Register Values -->
         @if (!string.IsNullOrEmpty(Model.AX))
         {
