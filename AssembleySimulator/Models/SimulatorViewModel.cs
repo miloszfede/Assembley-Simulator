@@ -26,6 +26,11 @@
     public string SP { get; set; } = "FFFF";
     public string DISP { get; set; } = "0000";
 
+    public string Offset { get; set; } = "0000";
+    public string Address { get; set; } = "0000";
+
+
+
     [System.Text.Json.Serialization.JsonIgnore]
     private Dictionary<string, string> Memory { get; set; } = new Dictionary<string, string>();
     
@@ -49,7 +54,7 @@
 
     public bool ValidateAllInputs()
     {
-        var registers = new[] { AX, BX, CX, DX, SI, DI, BP, SP };
+        var registers = new[] { AX, BX, CX, DX, SI, DI, BP, SP, Offset };
         return registers.All(r => ValidateHexInput(r?.PadLeft(4, '0')));
     }
 
@@ -111,32 +116,7 @@
 
 
 
-    // Calculate effective address for memory operations
-    public string CalculateEffectiveAddress(string addressingMode)
-    {
-        int result = 0;
-        if (!string.IsNullOrEmpty(DISP) && ValidateHexInput(DISP))
-        {
-            result = int.Parse(DISP, System.Globalization.NumberStyles.HexNumber);
-        }
-        
-        switch (addressingMode?.ToLower())
-        {
-            case "base":
-                result += int.Parse(BX, System.Globalization.NumberStyles.HexNumber);
-                break;
-            case "index":
-                result += int.Parse(SI, System.Globalization.NumberStyles.HexNumber);
-                break;
-            case "baseindex":
-                result += int.Parse(BX, System.Globalization.NumberStyles.HexNumber) +
-                         int.Parse(SI, System.Globalization.NumberStyles.HexNumber);
-                break;
-        }
-        
-        return result.ToString("X4");
-    }
-
+    
     private string GetRegisterValue(string register)
     {
         if (string.IsNullOrEmpty(register)) return "0000";
@@ -150,6 +130,7 @@
             "SI" => SI?.PadLeft(4, '0') ?? "0000",
             "DI" => DI?.PadLeft(4, '0') ?? "0000",
             "BP" => BP?.PadLeft(4, '0') ?? "0000",
+            "Offset" => Offset?.PadLeft(4, '0') ?? "0000",
             "SP" => SP?.PadLeft(4, '0') ?? "FFFF",
             _ => "0000"
         };
@@ -170,6 +151,48 @@
             case "DI": DI = value; break;
             case "BP": BP = value; break;
             case "SP": SP = value; break;
+            case "Offset": Offset = value; break;
         }
+
+        
+    }
+
+     public string CalculateEffectiveAddress(string addressingMode)
+    {
+        int result = 0;
+        
+        // Parse the Offset value
+        if (!string.IsNullOrEmpty(Offset) && ValidateHexInput(Offset))
+        {
+            result += int.Parse(Offset, System.Globalization.NumberStyles.HexNumber);
+        }
+        
+        switch (addressingMode?.ToLower())
+        {
+            case "base":
+                if (!string.IsNullOrEmpty(BX) && ValidateHexInput(BX))
+                {
+                    result += int.Parse(BX, System.Globalization.NumberStyles.HexNumber);
+                }
+                break;
+            case "index":
+                if (!string.IsNullOrEmpty(SI) && ValidateHexInput(SI))
+                {
+                    result += int.Parse(SI, System.Globalization.NumberStyles.HexNumber);
+                }
+                break;
+            case "baseindex":
+                if (!string.IsNullOrEmpty(BX) && ValidateHexInput(BX))
+                {
+                    result += int.Parse(BX, System.Globalization.NumberStyles.HexNumber);
+                }
+                if (!string.IsNullOrEmpty(SI) && ValidateHexInput(SI))
+                {
+                    result += int.Parse(SI, System.Globalization.NumberStyles.HexNumber);
+                }
+                break;
+        }
+        
+        return result.ToString("X4");
     }
 }

@@ -34,23 +34,31 @@
         border-radius: 4px;
         width: 100%;
     }
-    button {
-        width: 100%;
-        padding: 10px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background 0.3s;
+    
+    /* Updated button styles */
+    .btn-mov {
+        background-color: #3B82F6 !important; /* Tailwind blue-500 */
+        color: white !important;
     }
-    button:hover {
+    .btn-xchg {
+        background-color: #22C55E !important; /* Tailwind green-500 */
+        color: white !important;
+    }
+    .btn-push, .btn-pop {
+        background-color: #8B5CF6 !important; /* Tailwind purple-500 */
+        color: white !important;
+    }
+    .btn-calculate {
+        background-color: #8B5CF6 !important; /* Tailwind purple-500 */
+        color: white !important;
+    }
+    
+    /* General button hover effect */
+    .btn-mov:hover, .btn-xchg:hover, .btn-push:hover, .btn-pop:hover, .btn-calculate:hover {
         opacity: 0.9;
     }
-    .btn-mov { background-color: #007BFF; color: white; }
-    .btn-xchg { background-color: #28A745; color: white; }
-    .btn-push { background-color: #6F42C1; color: white; }
-    .btn-pop { background-color: #6F42C1; color: white; }
-
 </style>
+
 
 <div class="container mx-auto p-4">
     <div class="register-section">
@@ -101,6 +109,10 @@
                             <label>SP</label>
                             <input asp-for="SP" class="w-full px-3 py-2 border rounded" value="@Model.SP" />
                         </div>
+                        <div>
+                            <label>Offset</label>
+                            <input asp-for="Offset" class="w-full px-3 py-2 border rounded" value="@Model.Offset" />
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,6 +135,7 @@
                                     <option value="SI">SI</option>
                                     <option value="DI">DI</option>
                                     <option value="BP">BP</option>
+                                    <option value="Offset">Offset</option>
                                 </select>
                             
                                 <label for="movSource">,</label>
@@ -134,9 +147,10 @@
                                     <option value="SI">SI</option>
                                     <option value="DI">DI</option>
                                     <option value="BP">BP</option>
+                                    <option value="Offset">Offset</option>
                                 </select>
                             </div>
-                            <button type="submit" name="operation" value="MOV" class="w-full bg-blue-500 text-white p-2 rounded">
+                            <button type="submit" name="operation" value="MOV" class="w-full p-2 rounded btn-mov">
                                 MOV
                             </button>
                         </div>
@@ -156,6 +170,7 @@
                 <option value="SI">SI</option>
                 <option value="DI">DI</option>
                 <option value="BP">BP</option>
+                <option value="Offset">Offset</option>
             </select>
         
             <label for="xchgReg2">,</label>
@@ -167,9 +182,10 @@
                 <option value="SI">SI</option>
                 <option value="DI">DI</option>
                 <option value="BP">BP</option>
+                <option value="Offset">Offset</option>
             </select>
         </div>
-        <button type="submit" name="operation" value="XCHG" class="w-full bg-green-500 text-white p-2 rounded">
+        <button type="submit" name="operation" value="XCHG" class="w-full p-2 rounded btn-xchg">
             XCHG
         </button>
     </div>
@@ -189,9 +205,10 @@
                                     <option value="SI">SI</option>
                                     <option value="DI">DI</option>
                                     <option value="BP">BP</option>
+                                    <option value="Offset">Offset</option>
                                 </select>
                             </div>
-                            <button type="submit" name="operation" value="PUSH" class="w-full bg-purple-500 text-white p-2 rounded">
+                            <button type="submit" name="operation" value="PUSH" class="w-full p-2 rounded btn-push">
                                 PUSH
                             </button>
                         </div>
@@ -209,13 +226,14 @@
                 <option value="SI">SI</option>
                 <option value="DI">DI</option>
                 <option value="BP">BP</option>
+                <option value="Offset">Offset<</option>
             </select>
 
 
         </div>
-        <button type="submit" name="operation" value="POP" class="w-full bg-purple-500 text-white p-2 rounded">
-            POP
-        </button>
+        <button type="submit" name="operation" value="POP" class="w-full p-2 rounded btn-pop">
+    POP
+</button>
     </div>
 </div>
 
@@ -228,11 +246,11 @@
     <div class="grid grid-cols-3 gap-4">
         <div>
             <input type="radio" name="addressingMode" value="base" id="baseMode" />
-            <label for="baseMode">Base Mode (BX/BP)</label>
+            <label for="baseMode">Base Mode (BX + Offset)</label>
         </div>
         <div>
             <input type="radio" name="addressingMode" value="index" id="indexMode" />
-            <label for="indexMode">Index Mode (SI/DI)</label>
+            <label for="indexMode">Index Mode (SI + Offset)</label>
         </div>
         <div>
             <input type="radio" name="addressingMode" value="baseindex" id="baseIndexMode" />
@@ -240,9 +258,15 @@
         </div>
     </div>
     
-    <div class="mt-2">
-        <label>Displacement (Hex):</label>
-        <input type="text" name="DISP" class="w-full px-3 py-2 border rounded" placeholder="Enter displacement (optional)" />
+    <div class="mt-4">
+        <button type="submit" name="operation" value="CALCULATEADDRESS" class="w-full p-2 rounded btn-calculate">
+    Calculate Address
+</button>
+    </div>
+    
+    <div class="mt-4">
+        
+        <strong>Address:</strong> @Model.Address
     </div>
 </div>
         <!-- Display Current Register Values -->
@@ -262,7 +286,11 @@
                         <strong>DI:</strong> @Model.DI<br />
                         <strong>BP:</strong> @Model.BP<br />
                         <strong>SP:</strong> @Model.SP<br />
+                        <strong>Offset:</strong> @Model.Offset<br />
                     </div>
+                    <div>
+                <strong>Address:</strong> @Model.Address
+            </div>
                 </div>
             </div>
         }

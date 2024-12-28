@@ -35,6 +35,12 @@ public class HomeController : Controller
             
             switch (operation?.ToUpper())
             {
+                 case "CALCULATEADDRESS":
+                    if (!string.IsNullOrEmpty(addressingMode))
+                    {
+                        model.Address = model.CalculateEffectiveAddress(addressingMode);
+                    }
+                    break;
                 case "MOV":
                     if (!string.IsNullOrEmpty(addressingMode))
                     {
